@@ -10,6 +10,12 @@ import PopupWithSubmmitDelete from "./PopupWithSubmmitDelete";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
 
+import { Route, Routes } from "react-router-dom";
+import ProtectedRoute from './ProtectedRoute';
+import Login from "./Login";
+import Register from "./Register";
+
+
 export default function App () {
   // стейты(переменные) (привязан к одной ф и не выходит за пределы, выше)
   // ф-ия юз возвр массив в кот 2 элемента; текущие значение и ф-ия сеттер для его изм
@@ -181,16 +187,24 @@ export default function App () {
   <CurrentUserContext.Provider value={currentUser}>
     <div className="App page">
       <Header />
-      <Main
-        handleEditAvatarClick = {handleEditAvatarClick}   // передаем через пропс ф-ии, лучше одинаковые
-        handleEditProfileClick = {handleEditProfileClick} // поппап редактирования
-        handleAddPlaceClick = {handleAddPlaceClick}       // попап доб нов карточку
-        onCardClick={handleCardClick} // zoom f
-
-        cards = {cards}
-        onClickDeleteCard={handleConfimDeleteCard} // удалить карточку
-        onCardLike={handlePutLike} // лайк
-      />
+      <Routes>
+        <Route path="/" element={
+          <ProtectedRoute
+            component={Main}
+            /*loggedIn={loggedIn}*/
+            handleEditAvatarClick = {handleEditAvatarClick}   // передаем через пропс ф-ии, лучше одинаковые
+            handleEditProfileClick = {handleEditProfileClick} // поппап редактирования
+            handleAddPlaceClick = {handleAddPlaceClick}       // попап доб нов карточку
+            onCardClick={handleCardClick} // zoom f
+          
+            cards = {cards}
+            onClickDeleteCard={handleConfimDeleteCard} // удалить карточку
+            onCardLike={handlePutLike} // лайк
+          /> }>
+        </Route>
+        <Route path="/sign-up" element={<Register />}></Route>
+        <Route path="/sign-in" element={<Login />}></Route>
+      </Routes>
       <Footer />
 
       <EditProfilePopup 
