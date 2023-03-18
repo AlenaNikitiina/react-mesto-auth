@@ -1,0 +1,14 @@
+.header__navLink {
+  display: none;
+  text-decoration: none;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: right;
+  color: #FFFFFF;
+}
+
+.header__navLink_active {
+  display: block;
+}

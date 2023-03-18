@@ -1,7 +1,7 @@
 export default function PopupWithForm ( {name, title, children, onOverlayClick, onSubmit, buttonText, isOpen, onClose} ) {
 
   return (
-    <div className={`popup popup_${name} ${isOpen ? 'popup_opened' : ""}  popup_edit popup_add popup_change-avatar popup_delete-card`} 
+    <div className={`popup popup_${name} ${isOpen ? 'popup_opened' : "" }  popup_edit popup_add popup_change-avatar popup_delete-card`} 
      onMouseDown={onOverlayClick}>
       <div className="popup__container form">
         <button

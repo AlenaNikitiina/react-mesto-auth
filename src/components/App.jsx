@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
-import ImagePopup from './ImagePopup.js';
+import ImagePopup from './ImagePopup';
 import api from '../utils/api.js';
-import { CurrentUserContext } from '../contexts/CurrentUserContext.js'
+import { CurrentUserContext } from '../contexts/CurrentUserContext'
 import EditProfilePopup from "./EditProfilePopup";
 import PopupWithSubmmitDelete from "./PopupWithSubmmitDelete";
 import EditAvatarPopup from "./EditAvatarPopup";
@@ -14,6 +14,7 @@ import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from './ProtectedRoute';
 import Login from "./Login";
 import Register from "./Register";
+import { checkToken } from "../utils/auth";
 
 
 export default function App () {
@@ -24,16 +25,43 @@ export default function App () {
   const [isEditAddPlacePopupOpen, setIsEditAddPlacePopupOpen] = useState (false); // форма доб фотку
   const [isEiditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState (false); // форма смена аватара
   const [isWithSubmmitDeletePopupOpen, setIsWithSubmmitDeletePopupOpen] = useState (false); // форма подтверждения удаления карточки
-  const [selectedCard, setSelectedCard] = useState (null);  // zoom при клике на фото
+  const [selectedCard, setSelectedCard] = useState (null);  // zoom при клике на фото (то что будет false)
   const [deletingCard, setDeletingCard] = useState(null) // = false
 
   const [cards, setCards]                 = useState([]); // для апи ssss
   const [currentUser, setCurrentUser]     = useState({}) // переменную состояния currentUser
   const [renderLoading, setRenderLoading] = useState(false) // идет сохранение/ загрузка
 
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [userData, setUserData] = useState({})
+
   // ф состоит из колбэка(в кот находится запрос) и массива
   //(он не обязан-й, но без будет на любое нажатие вызываться useEffect. А с пустым массивом ток один раз при загрузке отработает)
   // а если положить конкретный is... будет следить за ним [isEditProfilePopupOpe] и перерис
+  
+/*
+  //
+  useEffect(() => {
+    tokenCheck();
+  }, []);
+  
+  //
+  function handleLogin () {
+    setLoggedIn(true);
+  };
+
+  // шлет запрос на сервер
+  function tokenCheck (){
+
+  };
+
+  function handleRegister( {email, password} ) {
+    auth.Register(email, password)
+      .then((res) => {
+        if (res) {}
+      })
+  }
+*/
 
   // от сервера получили данные о юзере и карточки
   useEffect(() => {
@@ -186,12 +214,15 @@ export default function App () {
   return (
   <CurrentUserContext.Provider value={currentUser}>
     <div className="App page">
-      <Header />
+      <Header 
+        //userEmail={userEmail}
+        //exit={exit}
+      />
       <Routes>
         <Route path="/" element={
           <ProtectedRoute
             component={Main}
-            /*loggedIn={loggedIn}*/
+            loggedIn={loggedIn}
             handleEditAvatarClick = {handleEditAvatarClick}   // передаем через пропс ф-ии, лучше одинаковые
             handleEditProfileClick = {handleEditProfileClick} // поппап редактирования
             handleAddPlaceClick = {handleAddPlaceClick}       // попап доб нов карточку
@@ -202,12 +233,12 @@ export default function App () {
             onCardLike={handlePutLike} // лайк
           /> }>
         </Route>
-        <Route path="/sign-up" element={<Register />}></Route>
+        <Route path="/sign-up" element={<Register  handleRegister={handleRegister} />}></Route>
         <Route path="/sign-in" element={<Login />}></Route>
       </Routes>
       <Footer />
 
-      <EditProfilePopup 
+      <EditProfilePopup
         isOpen={isEditProfilePopupOpen}
         onClose={closeAllPopups}
         onUpdateUser={handleUpdateUser}
@@ -252,3 +283,6 @@ export default function App () {
   )
 
 }
+
+
+/* handleRegister={handleRegister}*/
