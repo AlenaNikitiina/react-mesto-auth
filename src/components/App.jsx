@@ -13,8 +13,8 @@ import AddPlacePopup from "./AddPlacePopup";
 import { Route, Routes } from "react-router-dom";
 import ProtectedRoute from './ProtectedRoute';
 import Login from "./Login";
-import Register from "./Register";
-import { checkToken } from "../utils/auth";
+//import Register from "./Register";
+//import { checkToken } from "../utils/auth";
 
 
 export default function App () {
@@ -216,7 +216,7 @@ export default function App () {
     <div className="App page">
       <Header 
         //userEmail={userEmail}
-        //exit={exit}
+        //signOut={signOut}
       />
       <Routes>
         <Route path="/" element={
@@ -233,7 +233,7 @@ export default function App () {
             onCardLike={handlePutLike} // лайк
           /> }>
         </Route>
-        <Route path="/sign-up" element={<Register  handleRegister={handleRegister} />}></Route>
+        
         <Route path="/sign-in" element={<Login />}></Route>
       </Routes>
       <Footer />
@@ -286,3 +286,5 @@ export default function App () {
 
 
 /* handleRegister={handleRegister}*/
+
+/* before login <Route path="/sign-up" element={<Register  handleRegister={handleRegister} />}></Route>*/

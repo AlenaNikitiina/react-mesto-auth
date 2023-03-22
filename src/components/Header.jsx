@@ -14,12 +14,11 @@ function Header( {userEmail, signOut } ) {
         />
         <Route path='/' element={
           <>
-          <div className='header__container'>
-            <p className='header__email'>{userEmail}</p>
-            <button className='header__signOut' onClick={signOut}>Выйти</button>
-          </div>
-          </>
-          }
+            <div className='header__container'>
+              <p className='header__email'>{userEmail}</p>
+              <button className='header__signOut' onClick={signOut}>Выйти</button>
+            </div>
+          </>}
         />
       </Routes>
     </header>
@@ -27,3 +26,6 @@ function Header( {userEmail, signOut } ) {
 }
 
 export default Header;
+
+/* навигация и ссылки  <NavLink to="/about-us" className={({isActive}) => `menu__link ${isActive ? "menu__link_active" : ""}`}>О нас</NavLink>*/
+

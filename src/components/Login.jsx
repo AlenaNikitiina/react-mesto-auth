@@ -77,21 +77,21 @@ export default function Login ( {handleLogin} ) {
 
 
 
-import { useEffect } from "react";
-import { useHistory } from "react";
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function Login ( {onlogin} ) {
 
-  const [userName, setUserName] = useState ('');
-  const history = useHistory();
+  const navigate = useNavigate(); // возвр ф, которую мы можем использовать для навигации
+  const [userName, setUserName] =         useState ('');
   const [userPassword, setUserPassword] = useState ('');
-  const [message, setMessage] = useState (''); // асинхрон ф меняется когда мен пропсы или юстейт
-  //
+  const [message, setMessage] =           useState (''); // асинхрон ф меняется когда мен пропсы или юстейт
+
+  // очистить форму
   const resetForm = () => {
-    setMessage('');
     setUserName('');
     setUserPassword('');
+    setMessage('');
   }
 
   //
@@ -106,21 +106,21 @@ export default function Login ( {onlogin} ) {
   //отправляет данные на сервер. асинхрон
   function handleSubmit(e) {
     e.preventDefault();
-    onlogin({userName, userPassword})
+
+    onlogin( {userName, userPassword} )
       .then(resetForm())
-      .then(() => history.push('/ducs'))
+      .then(() => navigate.push('/ducs'))
       .catsh((err) => console.log('err'));
   }
 
   //
   useEffect (() => {
     if (localStorage.getItem('jwt')) {
-      history.push();
+      navigate.push();
     }
 
   }, []);
 
-  
   return (
     <section className="login" onSubmit={handleSubmit}>
       <h3 className="login__title">Вход</h3>
@@ -152,9 +152,13 @@ export default function Login ( {onlogin} ) {
           onChange={handleChangePassword}
         />
         <span className="form__input-error youPassword-error"></span>
-        <button className="popup__save-button login__button form__submit" type="submit">Войти</button>
+        <button className="login__button form__submit" type="submit">Войти</button>
       </form>
     </section>
   )
 
 }
+
+
+/*login__error" what is this &*/
+
