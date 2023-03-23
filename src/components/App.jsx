@@ -15,6 +15,7 @@ import ProtectedRoute from './ProtectedRoute';
 import Login from "./Login";
 //import Register from "./Register";
 //import { checkToken } from "../utils/auth";
+import InfoTooltip from "./InfoTooltip";
 
 
 export default function App () {
@@ -33,7 +34,9 @@ export default function App () {
   const [renderLoading, setRenderLoading] = useState(false) // идет сохранение/ загрузка
 
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userData, setUserData] = useState({})
+  const [userData, setUserData] = useState({});
+  const [isEditInfoTooltip, setIsEditInfoTooltip] = useState(false);
+  const [registrationForm, setRegistrationForm] = useState({ status: false, text: "" });;
 
   // ф состоит из колбэка(в кот находится запрос) и массива
   //(он не обязан-й, но без будет на любое нажатие вызываться useEffect. А с пустым массивом ток один раз при загрузке отработает)
@@ -62,6 +65,30 @@ export default function App () {
       })
   }
 */
+
+
+// прошла как регистрация
+function handelRegistration( {email, password} ) {
+  auth.register(email, password)
+    .then((res) => {
+      if (res) {
+        setRegistrationForm({
+          status: true,
+          text: 'Вы успешно зарегистрировались!',
+        })
+        navigate('/sign-in', { replace: true })
+      }
+    })
+    .catch(() => {
+      setRegistrationForm({
+        status: false,
+        text: 'Что-то пошло не так! Попробуйте ещё раз.',
+      })
+    })
+    .finally(() => setIsEditInfoTooltip(true))
+}
+
+
 
   // от сервера получили данные о юзере и карточки
   useEffect(() => {
@@ -114,6 +141,7 @@ export default function App () {
     setIsWithSubmmitDeletePopupOpen (false);
     setSelectedCard (null);
     setDeletingCard(null);
+    setIsEditInfoTooltip(false);
   }
 
   // обработчик изменения данных пользователя. имя работа. from EditProfilePopup
@@ -277,7 +305,12 @@ export default function App () {
         onClose={closeAllPopups}
         onOverlayClick={handleOverlayClick}
       />
-
+      
+      <InfoTooltip
+        isOpen={setSelectedCard}
+        onClose={closeAllPopups}
+        registrationForm={registrationForm}
+      />
     </div>
   </CurrentUserContext.Provider>
   )
@@ -287,4 +320,12 @@ export default function App () {
 
 /* handleRegister={handleRegister}*/
 
-/* before login <Route path="/sign-up" element={<Register  handleRegister={handleRegister} />}></Route>*/
+/*
+
+      <InfoTooltip
+        isOpen={setSelectedCard}
+        onClose={closeAllPopups}
+        registrationForm={registrationForm}
+      />
+      */
+/* before login <Route path="/sign-up" element={<Register handelRegistration={handelRegistration} />}></Route>*/

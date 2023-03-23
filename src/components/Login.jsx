@@ -83,7 +83,7 @@ import { useNavigate } from "react-router-dom";
 export default function Login ( {onlogin} ) {
 
   const navigate = useNavigate(); // возвр ф, которую мы можем использовать для навигации
-  const [userName, setUserName] =         useState ('');
+  const [userName, setUserName] =         useState (''); // Стейт, в котором содержится значение инпута
   const [userPassword, setUserPassword] = useState ('');
   const [message, setMessage] =           useState (''); // асинхрон ф меняется когда мен пропсы или юстейт
 
@@ -94,13 +94,14 @@ export default function Login ( {onlogin} ) {
     setMessage('');
   }
 
-  //
+  // Обработчик изменения инпута обновляет стейт
   function handleChangeName(e) {
-    setUserName (e.target.value);
+    setUserName(e.target.value);
   };
 
+  // Обработчик изменения инпута обновляет стейт
   function handleChangePassword(e) {
-    setUserPassword (e.target.value);
+    setUserPassword(e.target.value);
   };
 
   //отправляет данные на сервер. асинхрон
@@ -113,24 +114,23 @@ export default function Login ( {onlogin} ) {
       .catsh((err) => console.log('err'));
   }
 
-  //
+  /*
   useEffect (() => {
     if (localStorage.getItem('jwt')) {
       navigate.push();
     }
-
   }, []);
-
+  */
   return (
-    <section className="login" onSubmit={handleSubmit}>
+    <section className="login">
       <h3 className="login__title">Вход</h3>
       <p className="login__error">{message}</p>
-      <form className="form popup__form login__container">
+      <form className="form popup__form login__container" onSubmit={handleSubmit}>
         <input
           className="form__input login__input"
           name="email"
           id="youEmail"
-          type="email"
+          type="text"
           placeholder="Электронная почта"
           minLength={2}
           maxLength={20}
@@ -160,5 +160,5 @@ export default function Login ( {onlogin} ) {
 }
 
 
-/*login__error" what is this &*/
+/*login__error" what is this &   */
 
