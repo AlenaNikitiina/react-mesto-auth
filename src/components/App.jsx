@@ -9,11 +9,12 @@ import EditProfilePopup from "./EditProfilePopup";
 import PopupWithSubmmitDelete from "./PopupWithSubmmitDelete";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
-
-import { Route, Routes } from "react-router-dom";
+//
+import { Route, Routes, useNavigate } from "react-router-dom";
 import ProtectedRoute from './ProtectedRoute';
+import * as auth from '../utils/auth';
 import Login from "./Login";
-//import Register from "./Register";
+import Register from "./Register";
 //import { checkToken } from "../utils/auth";
 import InfoTooltip from "./InfoTooltip";
 
@@ -29,67 +30,71 @@ export default function App () {
   const [selectedCard, setSelectedCard] = useState (null);  // zoom при клике на фото (то что будет false)
   const [deletingCard, setDeletingCard] = useState(null) // = false
 
-  const [cards, setCards]                 = useState([]); // для апи ssss
+  const [cards, setCards]                 = useState([]); // для апи
   const [currentUser, setCurrentUser]     = useState({}) // переменную состояния currentUser
   const [renderLoading, setRenderLoading] = useState(false) // идет сохранение/ загрузка
 
+  // регистрация, авторизация
   const [loggedIn, setLoggedIn] = useState(false);
   const [userData, setUserData] = useState({});
   const [isEditInfoTooltip, setIsEditInfoTooltip] = useState(false);
-  const [registrationForm, setRegistrationForm] = useState({ status: false, text: "" });;
+  const [registrationForm, setRegistrationForm] = useState({ status: false, text: "" });
+  const navigate = useNavigate();
 
   // ф состоит из колбэка(в кот находится запрос) и массива
   //(он не обязан-й, но без будет на любое нажатие вызываться useEffect. А с пустым массивом ток один раз при загрузке отработает)
   // а если положить конкретный is... будет следить за ним [isEditProfilePopupOpe] и перерис
   
 /*
-  //
-  useEffect(() => {
-    tokenCheck();
-  }, []);
-  
-  //
-  function handleLogin () {
-    setLoggedIn(true);
-  };
-
   // шлет запрос на сервер
   function tokenCheck (){
-
   };
-
-  function handleRegister( {email, password} ) {
-    auth.Register(email, password)
-      .then((res) => {
-        if (res) {}
-      })
-  }
 */
 
-
-// прошла как регистрация
-function handelRegistration( {email, password} ) {
-  auth.register(email, password)
-    .then((res) => {
-      if (res) {
-        setRegistrationForm({
-          status: true,
-          text: 'Вы успешно зарегистрировались!',
-        })
-        navigate('/sign-in', { replace: true })
-      }
-    })
-    .catch(() => {
-      setRegistrationForm({
-        status: false,
-        text: 'Что-то пошло не так! Попробуйте ещё раз.',
+  // авторизация в компоненте логин
+  function handelLogin( {email, password} ) {
+    auth.authorize(email, password)
+      .then((data) => {
+        if (data.jwt) {
+          localStorage.setItem("jwt", data.jwt);
+          setLoggedIn(true);
+          setUserData(email, password);
+          navigate("/", {replace : true} )
+        }
       })
-    })
-    .finally(() => setIsEditInfoTooltip(true))
-}
+      .catch(() => {
+        setRegistrationForm({
+          status: false,
+          text: 'Что-то пошло не так!',
+        })
+      })
+  }
+
+  // регистрация в компоненте регистр. как прошла?
+  function handelRegistration( {email, password} ) {
+    auth.register(email, password)
+      .then((res) => {
+        if (res) {
+          setRegistrationForm({
+            status: true,
+            text: 'Вы успешно зарегистрировались!',
+          })
+          navigate('/sign-in', { replace: true })
+        }
+      })
+      .catch(() => {
+        setRegistrationForm({
+          status: false,
+          text: 'Что-то пошло не так! Попробуйте ещё раз.',
+        })
+      })
+      .finally(() => setIsEditInfoTooltip(true))
+  }
 
 
 
+
+  /////11////
   // от сервера получили данные о юзере и карточки
   useEffect(() => {
     Promise.all([ api.getUserInfo(), api.getInitialCards() ])
@@ -102,7 +107,6 @@ function handelRegistration( {email, password} ) {
       })
   }, [] )
 
-    
   function handleEditProfileClick () {
     setIsEditProfilePopupOpen (true) // при этом перерисуется
   }
@@ -261,8 +265,8 @@ function handelRegistration( {email, password} ) {
             onCardLike={handlePutLike} // лайк
           /> }>
         </Route>
-        
-        <Route path="/sign-in" element={<Login />}></Route>
+        <Route path="/sign-up" element={<Register handelRegistration={handelRegistration} />}></Route>
+        <Route path="/sign-in" element={<Login onlogin={handelLogin} />}></Route>
       </Routes>
       <Footer />
 
@@ -304,10 +308,11 @@ function handelRegistration( {email, password} ) {
         isOpen={setSelectedCard}
         onClose={closeAllPopups}
         onOverlayClick={handleOverlayClick}
+        registrationForm={registrationForm}
       />
-      
-      <InfoTooltip
-        isOpen={setSelectedCard}
+  
+       <InfoTooltip
+        isOpen={isEditInfoTooltip}
         onClose={closeAllPopups}
         registrationForm={registrationForm}
       />
@@ -318,14 +323,11 @@ function handelRegistration( {email, password} ) {
 }
 
 
-/* handleRegister={handleRegister}*/
-
 /*
 
       <InfoTooltip
-        isOpen={setSelectedCard}
+        isOpen={isEditInfoTooltip}
         onClose={closeAllPopups}
         registrationForm={registrationForm}
       />
       */
-/* before login <Route path="/sign-up" element={<Register handelRegistration={handelRegistration} />}></Route>*/
