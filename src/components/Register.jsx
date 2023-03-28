@@ -1,60 +1,69 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { register } from "../utils/auth";
 
 export default function Register ( {handelRegistration} ) {
-  
   const [userData, setUserData] = useState ({
     email: "",
     password: "",
   });
 
-  //
-  function handleChange(e) {
-    const {email, password} = e.target.value;
-    //??
+  const [message, setMessage] = useState (''); // асинхрон ф меняется когда мен пропсы или юстейт
+
+  // Обработчик изменения инпута обновляет стейт
+  function handleChangeEmail(e) {
+    const email = e.target.value;
+  
     setUserData ({
       ...userData,
-      email, //??
-      password,
+      email,
     });
   };
 
-  /* ????????????
+  // Обработчик изменения инпута обновляет стейт
+  function handleChangePassword(e) {
+    const password = e.target.value;
+    
+    setUserData ({
+      ...userData,
+      password
+    });
+  };
+
+  console.log('до сабмита',handleSubmit )
+
+  // отправляет данные на сервер
   function handleSubmit(e) {
     e.preventDefault();
-
+  
     if (!userData.email || !userData.password) {
-      return false;
+      return setMessage('Что-то заполнено не верно') 
     }
-    handelRegistration(userData)
-    setUserData({ email: "", password: "" });
-  }
-*/
 
- //отправляет данные на сервер. асинхрон
- function handleSubmit(e) {
-  e.preventDefault();
+    console.log('111',handleSubmit )
+    //handelRegistration(userData);
+    handelRegistration(userData.email, userData.password)
+    setUserData({ 
+      email: "",
+      password: ""
+    })
+    console.log('111112222',handleSubmit )
+  };
 
-  //if (!userEmail.email || !userPassword.password) {
-    handelRegistration(userData)
-  register(userData.email, userData.password);
-  setUserData({ email: ""});
-  setUserData({ password: ""});
-}
+  console.log('перед ретерн',handleSubmit )
 
   return (
-    <section className="login">
+    <section className="login" onSubmit={handleSubmit}>
       <h3 className="login__title">Регистрация</h3>
-      <form className="form popup__form login__container" onSubmit={handleSubmit} >
+      <p className="login__error">{message}</p>
+      <form className="form popup__form login__container">
         <input className="form__input login__input"
           name="email"
           id="youEmail"
           type="text"
           placeholder="Электронная почта"
-          minLength="2"
-          onChange={handleChange}
-          value={userData.email}
+          minLength={2}
+          onChange={handleChangeEmail}
+          value={userData.email || ''}
           required
         />
         <span className="form__input-error youEmail-error"></span>
@@ -63,9 +72,9 @@ export default function Register ( {handelRegistration} ) {
           id="youPassword"
           type="text"
           placeholder="Пароль"
-          minLength="2"
-          onChange={handleChange}
-          value={userData.password}
+          minLength={2}
+          onChange={handleChangePassword}
+          value={userData.password || ''}
           required
         />
         <span className="form__input-error youPassword-error"></span>
@@ -77,3 +86,11 @@ export default function Register ( {handelRegistration} ) {
     </section>
   )
 }
+
+
+  /* очистить форму
+  const resetForm = () => {
+    setUserEmail('');
+    setUserPassword('');
+    setMessage('');
+  }*/

@@ -15,7 +15,7 @@ import ProtectedRoute from './ProtectedRoute';
 import * as auth from '../utils/auth';
 import Login from "./Login";
 import Register from "./Register";
-//import { checkToken } from "../utils/auth";
+import { checkToken } from '../utils/auth';
 import InfoTooltip from "./InfoTooltip";
 
 
@@ -36,7 +36,7 @@ export default function App () {
 
   // регистрация, авторизация
   const [loggedIn, setLoggedIn] = useState(false);
-  const [userData, setUserData] = useState({});
+  const [userEmail, setUserEmail] = useState(""); // email in header
   const [isEditInfoTooltip, setIsEditInfoTooltip] = useState(false);
   const [registrationForm, setRegistrationForm] = useState({ status: false, text: "" });
   const navigate = useNavigate();
@@ -44,22 +44,18 @@ export default function App () {
   // ф состоит из колбэка(в кот находится запрос) и массива
   //(он не обязан-й, но без будет на любое нажатие вызываться useEffect. А с пустым массивом ток один раз при загрузке отработает)
   // а если положить конкретный is... будет следить за ним [isEditProfilePopupOpe] и перерис
-  
-/*
-  // шлет запрос на сервер
-  function tokenCheck (){
-  };
-*/
 
-  // авторизация в компоненте логин
+
+  // авторизация, в компоненте логин
   function handelLogin( {email, password} ) {
     auth.authorize(email, password)
       .then((data) => {
         if (data.jwt) {
-          localStorage.setItem("jwt", data.jwt);
           setLoggedIn(true);
-          setUserData(email, password);
+          localStorage.setItem("jwt", data.jwt); // если ок то добавь в localStorage
+          setUserEmail(email);
           navigate("/", {replace : true} )
+          console.log('hihi')
         }
       })
       .catch(() => {
@@ -68,9 +64,9 @@ export default function App () {
           text: 'Что-то пошло не так!',
         })
       })
-  }
+  };
 
-  // регистрация в компоненте регистр. как прошла?
+  // регистрация, в компоненте регистр. как прошла?
   function handelRegistration( {email, password} ) {
     auth.register(email, password)
       .then((res) => {
@@ -89,9 +85,35 @@ export default function App () {
         })
       })
       .finally(() => setIsEditInfoTooltip(true))
-  }
+  };
 
+ // кнопка выйти / разлогиниться
+  function signOut() {
+    localStorage.removeItem('jwt'); // удалить
+    setLoggedIn(false);
+    navigate('/sign-in');
+  };
 
+  // если у пользователя есть токен в localStorage,то проверим валидность токена
+  useEffect(() => {
+    const jwt = localStorage.getItem("jwt");
+  
+    if (jwt) {
+      auth.checkToken(jwt)
+        .then((res) => {
+          if (res) {
+            setLoggedIn(true); // авторизуем пользователя
+
+            setUserEmail(res.email) //получаем данные пользовател ????
+
+            navigate("/", {replace: true})
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+      }
+  }, [navigate]);
 
 
   /////11////
@@ -246,9 +268,9 @@ export default function App () {
   return (
   <CurrentUserContext.Provider value={currentUser}>
     <div className="App page">
-      <Header 
-        //userEmail={userEmail}
-        //signOut={signOut}
+      <Header
+        userEmail={userEmail}
+        onSignOut={signOut}
       />
       <Routes>
         <Route path="/" element={
@@ -266,7 +288,7 @@ export default function App () {
           /> }>
         </Route>
         <Route path="/sign-up" element={<Register handelRegistration={handelRegistration} />}></Route>
-        <Route path="/sign-in" element={<Login onlogin={handelLogin} />}></Route>
+        <Route path="/sign-in" element={<Login handleLogin={handelLogin} />}></Route>
       </Routes>
       <Footer />
 
@@ -310,8 +332,8 @@ export default function App () {
         onOverlayClick={handleOverlayClick}
         registrationForm={registrationForm}
       />
-  
-       <InfoTooltip
+
+      <InfoTooltip
         isOpen={isEditInfoTooltip}
         onClose={closeAllPopups}
         registrationForm={registrationForm}
@@ -321,13 +343,3 @@ export default function App () {
   )
 
 }
-
-
-/*
-
-      <InfoTooltip
-        isOpen={isEditInfoTooltip}
-        onClose={closeAllPopups}
-        registrationForm={registrationForm}
-      />
-      */

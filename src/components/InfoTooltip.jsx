@@ -1,8 +1,5 @@
-import registration_success from "../images/registration_success";
-import registration_unsuccess from "../images/registration_unsuccess";
-//import g from "../images/profile__avatar.png";
-//import headerLogo from '../images/logo-Vector.png';
-
+import registration_success from "../images/registration_success.png";
+import registration_unsuccess from "../images/registration_unsuccess.png";
 
 export default function InfoTooltip( { isOpen, onClose, registrationForm} ) {
   return (
@@ -14,12 +11,13 @@ export default function InfoTooltip( { isOpen, onClose, registrationForm} ) {
           aria-label="закрыть"
           onClick={onClose}
         />
-        <img className="popup__image" src={registrationForm.status ? registration_success : registration_unsuccess} alt="регистрация прошла успешно" />
-        <h3 className="popup__title">{registrationForm.text}</h3>
+        <img className="popup__image"
+          src={registrationForm.status ? registration_success.png : registration_unsuccess.png}
+          alt="статус регистрации"
+        />
+        <h3 className="popup__text">{registrationForm.text}</h3>
       </div>
     </section>
   )
 
 }
-
-/**src={registrationForm.status ? registration_success : registration_success}*/
