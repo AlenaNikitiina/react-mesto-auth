@@ -49,7 +49,7 @@ export default function App () {
   function handelLogin( {email, password} ) {
     auth.authorize(email, password)
       .then((data) => {
-        localStorage.setItem("jwt", data.jwt); // если ок то добавь в localStorage
+        localStorage.setItem("jwt", data.token); // если ок то добавь в localStorage
         setLoggedIn(true); 
         setUserEmail(email);
         navigate("/", {replace : true} )
@@ -84,71 +84,28 @@ export default function App () {
       .finally(() => setIsEditInfoTooltip(true))
   };
 
- /* // проверка токена. если есть токен в localStorage,то проверим валидность токена
-  useEffect(() => {
-    const jwt = localStorage.getItem("jwt");
+  // проверка токена. если есть токен в localStorage,то проверим валидность токена
+  const checkToken = () => {
+    const jwt = localStorage.getItem('jwt')
     if (jwt) {
       auth.checkToken(jwt)
-        .then((res) => {
-          if (jwt) {
-            setLoggedIn(true); // авторизуем пользователя
-            setUserEmail(res.email)
-            navigate("/", {replace: true})
-          }})
-        .catch((err) => {
-          console.log('mistake', err); // ??
-        });
-      }
-  }, [navigate]);
-*/
-
-
-  // проверка токена. если есть токен в localStorage,то проверим валидность токена
-  const checkToken = useCallback(() => {
-    const jwt = localStorage.getItem('jwt')
-    
-    if (localStorage.getItem('jwt')) {
-      auth.checkToken(jwt)
       .then((res) => {
-        if (res){
-          setLoggedIn(true);  // авторизуем пользователя
-          setUserEmail(res.email) //получаем данные пользователя для хэдера
+        if (res) {
+          setLoggedIn(true); // авторизуем пользователя
+          setUserEmail(res.data.email) //получаем данные пользователя для хэдера
           navigate("/", {replace: true}) // перенаправьте
-          console.log('токен верный', jwt)
         }
       })
       .catch((err) => {
         console.log('Неверный токен.', err);
       })
-    };
-}, [navigate]);
-
-useEffect(() => {
-  checkToken();
-}, [checkToken]);
-
-
-/*
-  useEffect(() => {
-  const checkToken = () => {
-    const jwt = localStorage.getItem('jwt')
-
-    if (localStorage.getItem('jwt')){
-      auth.checkToken(jwt)
-      .then((res) => {
-        if (res){
-          setLoggedIn(true);  // авторизуем пользователя
-          setUserEmail(res.email) //получаем данные пользователя для хэдера
-          navigate("/", {replace: true}) // перенаправьте
-        }
-      })
-      .catch((err) => {
-        console.log('mistake', err);
-      })
     }
-  }
-}, []);
-*/
+  }; 
+
+  //
+  useEffect(() => {
+    checkToken();
+  }, [] );
 
   // кнопка выйти / разлогиниться
   function signOut() {
@@ -158,7 +115,7 @@ useEffect(() => {
   };
 
   /////from 11pr////
-  // от сервера получили данные о юзере и карточки
+  // от сервера получили данные о юзере и карточки, если он залогрован
   useEffect(() => {
     if (loggedIn) {
     Promise.all([ api.getUserInfo(), api.getInitialCards() ])
