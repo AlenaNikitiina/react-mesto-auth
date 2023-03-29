@@ -8,6 +8,7 @@
 @import url(./blocks/header/__navLink/header__navLink.css);
 @import url(./blocks/header/__signOut/header__signOut.css);
 @import url(./blocks/header/__email/header__email.css);
+@import url(./blocks/header/__container/header__container.css);
 
 /*profile*/
 @import url(./blocks/profile/profile.css);

@@ -15,7 +15,7 @@ function Header( {userEmail, signOut } ) {
         <Route path='/' element={
           <>
             <div className='header__container'>
-              <p className='header__email'>{userEmail.email}</p>
+              <p className='header__email'>{userEmail}</p>
               <button className='header__signOut' onClick={signOut}>Выйти</button>
             </div>
           </>}

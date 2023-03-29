@@ -222,8 +222,7 @@ export default function Login ( {handleLogin} ) {
         email: "",
         password: ""
       })
-
-    console.log('после',handleSubmit)
+    //console.log('после',handleSubmit)
   }
 
   return (
