@@ -66,7 +66,7 @@ export default function Login ( {handleLogin} ) {
           className="form__input login__input"
           name="password"
           id="youPassword"
-          type="text"
+          type="password"
           placeholder="Пароль"
           minLength={2}
           maxLength={20}

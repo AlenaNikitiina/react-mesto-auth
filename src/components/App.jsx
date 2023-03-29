@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Header from './Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -55,6 +55,7 @@ export default function App () {
         navigate("/", {replace : true} )
       })
       .catch(() => {
+        setIsEditInfoTooltip(true)
         setRegistrationForm({
           status: false,
           text: 'Что-то пошло не так!',
@@ -101,12 +102,38 @@ export default function App () {
   }, [navigate]);
 */
 
+
   // проверка токена. если есть токен в localStorage,то проверим валидность токена
+  const checkToken = useCallback(() => {
+    const jwt = localStorage.getItem('jwt')
+    
+    if (localStorage.getItem('jwt')) {
+      auth.checkToken(jwt)
+      .then((res) => {
+        if (res){
+          setLoggedIn(true);  // авторизуем пользователя
+          setUserEmail(res.email) //получаем данные пользователя для хэдера
+          navigate("/", {replace: true}) // перенаправьте
+          console.log('токен верный', jwt)
+        }
+      })
+      .catch((err) => {
+        console.log('Неверный токен.', err);
+      })
+    };
+}, [navigate]);
+
+useEffect(() => {
+  checkToken();
+}, [checkToken]);
+
+
+/*
   useEffect(() => {
   const checkToken = () => {
-    if (localStorage.getItem('jwt')){
-      const jwt = localStorage.getItem('jwt')
+    const jwt = localStorage.getItem('jwt')
 
+    if (localStorage.getItem('jwt')){
       auth.checkToken(jwt)
       .then((res) => {
         if (res){
@@ -121,6 +148,7 @@ export default function App () {
     }
   }
 }, []);
+*/
 
   // кнопка выйти / разлогиниться
   function signOut() {
@@ -132,6 +160,7 @@ export default function App () {
   /////from 11pr////
   // от сервера получили данные о юзере и карточки
   useEffect(() => {
+    if (loggedIn) {
     Promise.all([ api.getUserInfo(), api.getInitialCards() ])
       .then(( [data, cards] ) => {
         setCurrentUser (data);
@@ -140,7 +169,7 @@ export default function App () {
       .catch((err) => {
         console.log(`Ошибка в процессе загрузки данных пользователя и галереи: ${err}`);
       })
-  }, [] )
+  }}, [loggedIn] )
 
   function handleEditProfileClick () {
     setIsEditProfilePopupOpen (true) // при этом перерисуется

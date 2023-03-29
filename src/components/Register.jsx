@@ -64,7 +64,7 @@ export default function Register ( {handelRegistration} ) {
         <input className="form__input login__input"
           name="password"
           id="youPassword"
-          type="text"
+          type="password"
           placeholder="Пароль"
           minLength={2}
           maxLength={30}
