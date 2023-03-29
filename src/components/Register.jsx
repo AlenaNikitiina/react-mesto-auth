@@ -29,8 +29,6 @@ export default function Register ( {handelRegistration} ) {
     });
   };
 
-  //console.log('до сабмита',handleSubmit )
-
   // отправляет данные на сервер
   function handleSubmit(e) {
     e.preventDefault();
@@ -38,18 +36,13 @@ export default function Register ( {handelRegistration} ) {
     if (!userData.email || !userData.password) {
       return setMessage('Что-то заполнено не верно') 
     }
-
-    //console.log('111',handleSubmit )
     handelRegistration(userData);
 
     setUserData({ 
       email: "",
       password: ""
     })
-    //console.log('111112222',handleSubmit )
   };
-
-  //console.log('перед ретерн',handleSubmit )
 
   return (
     <section className="login" onSubmit={handleSubmit}>

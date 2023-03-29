@@ -11,13 +11,12 @@ export default function InfoTooltip( { isOpen, onClose, registrationForm} ) {
           aria-label="закрыть"
           onClick={onClose}
         />
-        <img className="popup__image"
-          src={registrationForm.status ? registration_success.png : registration_unsuccess.png}
+        <img className="popup__image-l"
+          src={registrationForm.status ? registration_success : registration_unsuccess}
           alt="статус регистрации"
         />
         <h3 className="popup__text">{registrationForm.text}</h3>
       </div>
     </section>
   )
-
 }

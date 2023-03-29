@@ -1,7 +1,7 @@
 import { Routes, Route, Link } from 'react-router-dom';
 import headerLogo from '../images/logo-Vector.png';
 
-function Header( {userEmail, signOut } ) {
+export default function Header( {userEmail, onSignOut } ) {
   return (
     <header className="header">
       <img className="header__logo" src={headerLogo} alt="логотип приложения Место" />
@@ -16,7 +16,7 @@ function Header( {userEmail, signOut } ) {
           <>
             <div className='header__container'>
               <p className='header__email'>{userEmail}</p>
-              <button className='header__signOut' onClick={signOut}>Выйти</button>
+              <button className='header__signOut' onClick={onSignOut}>Выйти</button>
             </div>
           </>}
         />
@@ -24,8 +24,6 @@ function Header( {userEmail, signOut } ) {
     </header>
   );
 }
-
-export default Header;
 
 /* навигация и ссылки  <NavLink to="/about-us" className={({isActive}) => `menu__link ${isActive ? "menu__link_active" : ""}`}>О нас</NavLink>*/
 

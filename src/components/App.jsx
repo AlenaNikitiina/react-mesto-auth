@@ -9,13 +9,12 @@ import EditProfilePopup from "./EditProfilePopup";
 import PopupWithSubmmitDelete from "./PopupWithSubmmitDelete";
 import EditAvatarPopup from "./EditAvatarPopup";
 import AddPlacePopup from "./AddPlacePopup";
-//
+// регистрация и авторизация
 import { Route, Routes, useNavigate } from "react-router-dom";
 import ProtectedRoute from './ProtectedRoute';
 import * as auth from '../utils/auth';
 import Login from "./Login";
 import Register from "./Register";
-import { checkToken } from '../utils/auth';
 import InfoTooltip from "./InfoTooltip";
 
 
@@ -37,7 +36,7 @@ export default function App () {
   // регистрация, авторизация
   const [loggedIn, setLoggedIn] = useState(false);
   const [userEmail, setUserEmail] = useState(""); // email in header
-  const [isEditInfoTooltip, setIsEditInfoTooltip] = useState(false);
+  const [isEditInfoTooltip, setIsEditInfoTooltip] = useState(false); // popup
   const [registrationForm, setRegistrationForm] = useState({ status: false, text: "" });
   const navigate = useNavigate();
 
@@ -63,7 +62,7 @@ export default function App () {
       })
   };
 
-  // регистрация, в компоненте регистр. как прошла?
+  // регистрация, в компоненте регистр / как прошла ?
   function handelRegistration( {email, password} ) {
     auth.register(email, password)
       .then((res) => {
@@ -84,35 +83,53 @@ export default function App () {
       .finally(() => setIsEditInfoTooltip(true))
   };
 
- // кнопка выйти / разлогиниться
-  function signOut() {
-    localStorage.removeItem('jwt'); // удалить
-    setLoggedIn(false);
-    navigate('/sign-in');
-  };
-
-  // если у пользователя есть токен в localStorage,то проверим валидность токена
+ /* // проверка токена. если есть токен в localStorage,то проверим валидность токена
   useEffect(() => {
     const jwt = localStorage.getItem("jwt");
-  
     if (jwt) {
       auth.checkToken(jwt)
         .then((res) => {
-          if (res) {
+          if (jwt) {
             setLoggedIn(true); // авторизуем пользователя
-
-            setUserEmail(res.email) //получаем данные пользовател ????
-
-            navigate("/", {replace: true})}
-        })
+            setUserEmail(res.email)
+            navigate("/", {replace: true})
+          }})
         .catch((err) => {
-          console.log(err);
-        })
+          console.log('mistake', err); // ??
+        });
       }
   }, [navigate]);
+*/
 
+  // проверка токена. если есть токен в localStorage,то проверим валидность токена
+  useEffect(() => {
+  const checkToken = () => {
+    if (localStorage.getItem('jwt')){
+      const jwt = localStorage.getItem('jwt')
 
-  /////11////
+      auth.checkToken(jwt)
+      .then((res) => {
+        if (res){
+          setLoggedIn(true);  // авторизуем пользователя
+          setUserEmail(res.email) //получаем данные пользователя для хэдера
+          navigate("/", {replace: true}) // перенаправьте
+        }
+      })
+      .catch((err) => {
+        console.log('mistake', err);
+      })
+    }
+  }
+}, []);
+
+  // кнопка выйти / разлогиниться
+  function signOut() {
+    localStorage.removeItem('jwt'); // удалить
+    setLoggedIn(false); // разлогинить
+    navigate('/sign-in');
+  };
+
+  /////from 11pr////
   // от сервера получили данные о юзере и карточки
   useEffect(() => {
     Promise.all([ api.getUserInfo(), api.getInitialCards() ])
