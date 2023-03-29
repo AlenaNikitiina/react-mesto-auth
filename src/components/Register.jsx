@@ -25,11 +25,11 @@ export default function Register ( {handelRegistration} ) {
     
     setUserData ({
       ...userData,
-      password
+      password,
     });
   };
 
-  console.log('до сабмита',handleSubmit )
+  //console.log('до сабмита',handleSubmit )
 
   // отправляет данные на сервер
   function handleSubmit(e) {
@@ -39,17 +39,17 @@ export default function Register ( {handelRegistration} ) {
       return setMessage('Что-то заполнено не верно') 
     }
 
-    console.log('111',handleSubmit )
-    //handelRegistration(userData);
-    handelRegistration(userData.email, userData.password)
+    //console.log('111',handleSubmit )
+    handelRegistration(userData);
+
     setUserData({ 
       email: "",
       password: ""
     })
-    console.log('111112222',handleSubmit )
+    //console.log('111112222',handleSubmit )
   };
 
-  console.log('перед ретерн',handleSubmit )
+  //console.log('перед ретерн',handleSubmit )
 
   return (
     <section className="login" onSubmit={handleSubmit}>
@@ -62,6 +62,7 @@ export default function Register ( {handelRegistration} ) {
           type="text"
           placeholder="Электронная почта"
           minLength={2}
+          maxLength={30}
           onChange={handleChangeEmail}
           value={userData.email || ''}
           required
@@ -73,6 +74,7 @@ export default function Register ( {handelRegistration} ) {
           type="text"
           placeholder="Пароль"
           minLength={2}
+          maxLength={30}
           onChange={handleChangePassword}
           value={userData.password || ''}
           required

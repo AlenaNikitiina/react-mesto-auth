@@ -50,13 +50,13 @@ export default function App () {
   function handelLogin( {email, password} ) {
     auth.authorize(email, password)
       .then((data) => {
-        if (data.jwt) {
-          setLoggedIn(true);
+        //if (data.jwt) {
           localStorage.setItem("jwt", data.jwt); // если ок то добавь в localStorage
+          setLoggedIn(true); 
           setUserEmail(email);
           navigate("/", {replace : true} )
           console.log('hihi')
-        }
+        //}
       })
       .catch(() => {
         setRegistrationForm({
@@ -100,14 +100,12 @@ export default function App () {
   
     if (jwt) {
       auth.checkToken(jwt)
-        .then((res) => {
-          if (res) {
+        .then(({data : {email}}) => {
             setLoggedIn(true); // авторизуем пользователя
 
-            setUserEmail(res.email) //получаем данные пользовател ????
+            setUserEmail(email) //получаем данные пользовател ????
 
             navigate("/", {replace: true})
-          }
         })
         .catch((err) => {
           console.log(err);

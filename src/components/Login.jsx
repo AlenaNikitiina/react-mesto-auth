@@ -206,7 +206,7 @@ export default function Login ( {handleLogin} ) {
     });
   };
 
-      console.log('до сабмита',handleSubmit )
+    //console.log('до сабмита',handleSubmit )
 
   //отправляет данные на сервер
   function handleSubmit(e) {
@@ -217,7 +217,7 @@ export default function Login ( {handleLogin} ) {
       .then(() => setMessage(""))
     }
     handleLogin(userData);
-      console.log("внутри сабмита", handleLogin);
+      //console.log("внутри сабмита", handleLogin);
       setUserData({ 
         email: "",
         password: ""
