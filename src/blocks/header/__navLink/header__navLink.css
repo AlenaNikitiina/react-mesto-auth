@@ -12,3 +12,11 @@
 .header__navLink_active {
   display: block;
 }
+
+@media all and (max-width: 425px) {
+  .header__navLink {
+    text-align: right;
+    margin: 0px 30px 20px auto;
+    padding: 0 0;
+  }
+}

@@ -10,3 +10,11 @@
   cursor: pointer;
   background-color: transparent;
 }
+
+@media all and (max-width: 425px) {
+  .header__signOut {
+    text-align: center;
+    margin: 18px auto 20px auto;
+    padding: 0 0;
+  }
+}

@@ -6,3 +6,9 @@
   color: rgba(204, 204, 204, 1);
   font-family: Inter, Helvetica Neue, Arial,sans-serif;
 }
+
+@media all and (max-width: 425px) {
+  .login__input {
+    margin: 0 auto;
+  }
+}

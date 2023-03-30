@@ -9,4 +9,16 @@
   color: rgba(0, 0, 0, 1);
   background-color: white;
   cursor: pointer;
+  font-family: Inter, Helvetica Neue, Arial,sans-serif;
+}
+
+@media all and (max-width: 425px) {
+  .login__button {
+    display: flex;
+    flex-direction: column;
+    width: 260px;
+    margin: 170px auto 0 auto;
+    align-content: center;
+    flex-wrap: wrap;
+  }
 }
