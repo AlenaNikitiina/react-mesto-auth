@@ -13,8 +13,10 @@
 
 @media all and (max-width: 425px) {
   .header__signOut {
+    font-size: 14px;
     text-align: center;
-    margin: 18px auto 20px auto;
+    /*margin: 18px auto 20px auto;*/
+    margin: 50px auto 0px auto;
     padding: 0 0;
   }
 }
